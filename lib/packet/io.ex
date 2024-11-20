@@ -1,5 +1,6 @@
-# SPDX-FileCopyrightText: 2021 R&D Squadron <bebrobchik@gmail.com>
+# SPDX-FileCopyrightText: 2024 R&D Squadron <bebrobchik@gmail.com>
 #
+# This file is part of the Sif project.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 defmodule Packet.IO do
