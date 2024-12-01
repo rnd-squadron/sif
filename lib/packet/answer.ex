@@ -12,11 +12,13 @@ defmodule Packet.Record do
            rtype <- Packet.IO.read_uint16(packet_io),
            rclass <- Packet.IO.read_uint16(packet_io),
            ttl <- Packet.IO.read_uint32(packet_io),
-           len <- Packet.IO.read_uint16(packet_io) do
+           len <- Packet.IO.read_uint16(packet_io),
+           {:ok, rtype_atom} <- RecordType.to_atom(rtype),
+           {:ok, rclass_atom} <- RecordClass.to_atom(rclass) do
         %Preamble{
           name: label,
-          type: rtype,
-          class: rclass,
+          type: rtype_atom,
+          class: rclass_atom,
           ttl: ttl,
           len: len,
         }
@@ -37,12 +39,11 @@ defmodule Packet.Record do
     end
   end
 
-  @a_record_type 1
   def read(packet_io) do
     p = Preamble.read(packet_io)
 
     case p.type do
-      @a_record_type -> A.read(packet_io, p)
+      :a -> A.read(packet_io, p)
       _ -> {:error, "Unknown record type"}
     end
   end

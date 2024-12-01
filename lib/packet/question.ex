@@ -8,12 +8,14 @@ defmodule Packet.Question do
 
   def read(packet_io) do
     with label when is_binary(label) <- Packet.IO.read_qname(packet_io),
-         qtype <- Packet.IO.read_uint16(packet_io),
-         qclass <- Packet.IO.read_uint16(packet_io) do
+         rtype <- Packet.IO.read_uint16(packet_io),
+         rclass <- Packet.IO.read_uint16(packet_io),
+         {:ok, rtype_atom} <- RecordType.to_atom(rtype),
+         {:ok, rclass_atom} <- RecordClass.to_atom(rclass) do
       %Packet.Question{
         name: label,
-        type: qtype,
-        class: qclass,
+        type: rtype_atom,
+        class: rclass_atom,
       }
     end
   end

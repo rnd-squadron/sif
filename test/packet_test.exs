@@ -13,7 +13,7 @@ defmodule PacketTest do
     bits = %{qr: 1, aa: 1, tc: 1, rd: 1, ra: 1}
     z = 0
     opcode = 0
-    rcode = 1
+    rcode = 0
 
     ttl_1 = :rand.uniform(@max_ttl)
     ttl_2 = :rand.uniform(@max_ttl)
@@ -40,12 +40,12 @@ defmodule PacketTest do
     assert h == %Packet.Header{
       id: packet_id,
       query_response: true,
-      opcode: 0,
+      opcode: :query,
       authoritative_answer: true,
       truncated_message: true,
       recursion_desired: true,
       recursion_available: true,
-      response_code: 1,
+      response_code: :no_error,
       question_count: 2,
       answer_count: 2,
       authority_count: 0,
@@ -55,13 +55,13 @@ defmodule PacketTest do
     assert Packet.QuestionList.read(io, h.question_count) == [
       %Packet.Question{
         name: "mrbbk.com",
-        type: 1,
-        class: 1,
+        type: :a,
+        class: :in,
       },
       %Packet.Question{
         name: "google.com",
-        type: 1,
-        class: 1,
+        type: :a,
+        class: :in,
       },
     ]
 
@@ -69,8 +69,8 @@ defmodule PacketTest do
       %Packet.Record.A{
         preamble: %Packet.Record.Preamble{
           name: "mrbbk.com",
-          type: 1,
-          class: 1,
+          type: :a,
+          class: :in,
           ttl: ttl_1,
           len: 4,
         },
@@ -79,8 +79,8 @@ defmodule PacketTest do
       %Packet.Record.A{
         preamble: %Packet.Record.Preamble{
           name: "google.com",
-          type: 1,
-          class: 1,
+          type: :a,
+          class: :in,
           ttl: ttl_2,
           len: 4,
         },

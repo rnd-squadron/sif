@@ -26,16 +26,18 @@ defmodule Packet.Header do
          qd_count when is_integer(qd_count) <- Packet.IO.read_uint16(packet_io),
          an_count when is_integer(an_count) <- Packet.IO.read_uint16(packet_io),
          ns_count when is_integer(ns_count) <- Packet.IO.read_uint16(packet_io),
-         ar_count when is_integer(ar_count) <- Packet.IO.read_uint16(packet_io) do
+         ar_count when is_integer(ar_count) <- Packet.IO.read_uint16(packet_io),
+         {:ok, opcode_atom} <- OpCode.to_atom(opcode),
+         {:ok, rcode_atom} <- ResponseCode.to_atom(rcode) do
       %Packet.Header{
         id: id,
         query_response: bit_to_boolean(qr),
-        opcode: opcode,
+        opcode: opcode_atom,
         authoritative_answer: bit_to_boolean(aa),
         truncated_message: bit_to_boolean(tc),
         recursion_desired: bit_to_boolean(rd),
         recursion_available: bit_to_boolean(ra),
-        response_code: rcode,
+        response_code: rcode_atom,
         question_count: qd_count,
         answer_count: an_count,
         authority_count: ns_count,
