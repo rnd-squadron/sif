@@ -3,18 +3,6 @@
 # This file is part of the Sif project.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-defmodule FieldValue do
-  @doc """
-  Converts a field value into integer representation.
-  """
-  @callback to_integer(atom) :: integer
-
-  @doc """
-  Converts integer representation of a field value into atom.
-  """
-  @callback to_atom(integer) :: atom
-end
-
 defmodule FieldUtility do
   defmacro __using__([values: atoms, start_index: index]) when is_list(atoms) do
     quote do
@@ -44,7 +32,6 @@ defmodule FieldUtility do
 end
 
 defmodule RecordType do
-  @behaviour FieldValue
   use FieldUtility, values: [
     :a, :ns, :md, :mf, :cname, :soa, :mb, :mg, :mr, :null, :wks, :ptr,
     :hinfo, :minfo, :mx, :txt,
@@ -52,27 +39,22 @@ defmodule RecordType do
 end
 
 defmodule RecordQType do
-  @behaviour FieldValue
   use FieldUtility, values: [:axfr, :mail_b, :mail_a, :*], start_index: 252
 end
 
 defmodule RecordClass do
-  @behaviour FieldValue
   use FieldUtility, values: [:in, :cs, :ch, :hs], start_index: 1
 end
 
 defmodule RecordQClass do
-  @behaviour FieldValue
   use FieldUtility, values: [:*], start_index: 255
 end
 
 defmodule OpCode do
-  @behaviour FieldValue
   use FieldUtility, values: [:query, :i_query, :status], start_index: 0
 end
 
 defmodule ResponseCode do
-  @behaviour FieldValue
   use FieldUtility, values: [
     :no_error, :format_error, :server_failure, :name_error, :not_implemented, 
     :refused,

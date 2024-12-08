@@ -8,9 +8,13 @@ defmodule Packet.IO do
   Provides IO-like interface to read/write a DNS binary packet.
   """
 
+  @typedoc "An IO device for a binary packet."
+  @type device() :: {:file_descriptor, :ram_file, Port.t}
+
   @doc """
   Opens a binary packet as IO device.
   """
+  @spec open(binary) :: device
   def open(packet) when is_binary(packet) do
     :file.open(packet, [:ram, :read, :write, :binary])
   end
@@ -32,7 +36,7 @@ defmodule Packet.IO do
   end
 
   def write_uint32(packet_io, value) do
-    Packet.IO.Writer.write_uint16(packet_io, value)
+    Packet.IO.Writer.write_uint32(packet_io, value)
   end
 
   def write_qname(packet_io, qname) do
