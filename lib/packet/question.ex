@@ -27,7 +27,7 @@ defmodule Packet.Question do
   def write(packet_io, question) do
     with :ok <- Packet.IO.write_qname(packet_io, question.name),
       {:ok, rtype_num} <- RecordType.to_integer(question.type),
-      Packet.IO.write_uint16(packet_io, rtype_num),
+      :ok <- Packet.IO.write_uint16(packet_io, rtype_num),
       {:ok, rclass_num} <- RecordClass.to_integer(question.class) do
         Packet.IO.write_uint16(packet_io, rclass_num)
     end
